@@ -2,7 +2,6 @@
 #ifndef BLOCKCHAIN_H
 #define BLOCKCHAIN_H
 
-#include <vector>
 #include <map>
 #include <queue>
 #include <memory>
@@ -10,15 +9,16 @@
 #include "Transaction.h"
 #include "Validator.h"
 #include "Wallet.h"
+#include "LinkedList.h"  // New include
 
 using namespace std;
 
 class Blockchain {
 private:
-    vector<Block> chain;
+    BlockchainList chain;  // Changed from vector<Block> to BlockchainList
     queue<Transaction> pendingTransactions;
-    map<string, double> balances; // Address -> Balance (Account-based model)
-    map<string, Validator> validators; // Address -> Validator
+    map<string, double> balances;
+    map<string, Validator> validators;
     double miningReward;
     int maxTransactionsPerBlock;
     double totalStake;
@@ -26,6 +26,9 @@ private:
 public:
     // Constructor
     Blockchain();
+    
+    // Destructor
+    ~Blockchain();
     
     // Genesis block creation
     void createGenesisBlock();
@@ -40,7 +43,7 @@ public:
     
     // Validator operations
     void registerValidator(const string& address, double stake);
-    string selectValidator(); // POS: Select validator based on stake
+    string selectValidator();
     void distributeReward(const string& validatorAddress);
     
     // Balance operations
@@ -58,7 +61,7 @@ public:
     void printBalances() const;
     
     // Getters
-    int getChainLength() const { return chain.size(); }
+    int getChainLength() const { return chain.getSize(); }
     int getPendingTransactionCount() const { return pendingTransactions.size(); }
     double getTotalStake() const { return totalStake; }
 };
